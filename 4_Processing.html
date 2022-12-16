@@ -1,0 +1,821 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Text Processing &#8212; Using NLP to Extract Insight from Steam Reviews</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Exploratory Data Analysis" href="5_eda.html" />
+    <link rel="prev" title="Method" href="2_Method.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/steam_logo.jpg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">Using NLP to Extract Insight from Steam Reviews</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="1_intro.html">
+                    Steam User Reviews: Aspect Based Sentiment Analysis
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_data.html">
+   The Data
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_Method.html">
+   Method
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Text Processing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="5_eda.html">
+   Exploratory Data Analysis
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_textblobUpdate.html">
+   Update TextBlob Sentiment Lexicon
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="7_Interpretation.html">
+   Interpretation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/r0btaylor/SA_steam_reviews/master?urlpath=tree/docs/4_Processing.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/r0btaylor/SA_steam_reviews"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/r0btaylor/SA_steam_reviews/issues/new?title=Issue%20on%20page%20%2F4_Processing.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/4_Processing.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-data">
+   Load Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clean-text">
+   Clean Text
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#define-functions">
+     Define Functions
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#contraction-expansion">
+       Contraction Expansion
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#string-formatting">
+       String Formatting
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#duplicate-removal">
+       Duplicate Removal
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#spelling-correction">
+       Spelling Correction
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#lemmatisation">
+       Lemmatisation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#apply-functions">
+     Apply Functions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Text Processing</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-data">
+   Load Data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#clean-text">
+   Clean Text
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#define-functions">
+     Define Functions
+    </a>
+    <ul class="nav section-nav flex-column">
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#contraction-expansion">
+       Contraction Expansion
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#string-formatting">
+       String Formatting
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#duplicate-removal">
+       Duplicate Removal
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#spelling-correction">
+       Spelling Correction
+      </a>
+     </li>
+     <li class="toc-h4 nav-item toc-entry">
+      <a class="reference internal nav-link" href="#lemmatisation">
+       Lemmatisation
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#apply-functions">
+     Apply Functions
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="text-processing">
+<h1>Text Processing<a class="headerlink" href="#text-processing" title="Permalink to this headline">#</a></h1>
+<section id="load-data">
+<h2>Load Data<a class="headerlink" href="#load-data" title="Permalink to this headline">#</a></h2>
+<p>All data from the preceeding web scrape is loaded.</p>
+<p><code class="docutils literal notranslate"><span class="pre">review_text</span></code> is converted to lower case.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="c1"># load data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/processed_review_data.csv&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;review_text&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;review_text&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="clean-text">
+<h2>Clean Text<a class="headerlink" href="#clean-text" title="Permalink to this headline">#</a></h2>
+<p>Several functions to process review text are developed and applied. These include:</p>
+<ol class="simple">
+<li><p>Contraction expansion</p></li>
+<li><p>String formatting</p></li>
+<li><p>Duplicate character and word removal</p></li>
+<li><p>Spelling correction</p></li>
+<li><p>Lemmatisation and tokenisation</p></li>
+</ol>
+<section id="define-functions">
+<h3>Define Functions<a class="headerlink" href="#define-functions" title="Permalink to this headline">#</a></h3>
+<section id="contraction-expansion">
+<h4>Contraction Expansion<a class="headerlink" href="#contraction-expansion" title="Permalink to this headline">#</a></h4>
+<p>A dictionary of contractions and associated expnasions are defined.</p>
+<p>The Python <a class="reference external" href="https://docs.python.org/3/library/re.html">Regular Expression</a> library is used to identify and replace all contractions with their expanded form.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">re</span>
+<span class="c1"># define contractions dictionary</span>
+<span class="n">cList</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1"># A.</span>
+    <span class="s2">&quot;ain&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;am not&quot;</span><span class="p">,</span><span class="s2">&quot;aren&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;are not&quot;</span><span class="p">,</span>
+    <span class="c1"># C.</span>
+    <span class="s2">&quot;can&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;cannot&quot;</span><span class="p">,</span><span class="s2">&quot;can&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;cannot have&quot;</span><span class="p">,</span><span class="s2">&quot;&#39;cause&quot;</span><span class="p">:</span> <span class="s2">&quot;because&quot;</span><span class="p">,</span><span class="s2">&quot;could&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;could have&quot;</span><span class="p">,</span><span class="s2">&quot;couldn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;could not&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;couldnt&quot;</span><span class="p">:</span> <span class="s2">&quot;could not&quot;</span><span class="p">,</span><span class="s2">&quot;couldn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;could not have&quot;</span><span class="p">,</span>
+    <span class="c1"># D.</span>
+    <span class="s2">&quot;didn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;did not&quot;</span><span class="p">,</span><span class="s2">&quot;doesn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;does not&quot;</span><span class="p">,</span><span class="s2">&quot;don&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;do not&quot;</span><span class="p">,</span>
+    <span class="c1"># H.</span>
+    <span class="s2">&quot;hadn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;had not&quot;</span><span class="p">,</span><span class="s2">&quot;hadn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;had not have&quot;</span><span class="p">,</span><span class="s2">&quot;hasn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;has not&quot;</span><span class="p">,</span><span class="s2">&quot;haven&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;have not&quot;</span><span class="p">,</span><span class="s2">&quot;he&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;he would&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;he&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;he would have&quot;</span><span class="p">,</span><span class="s2">&quot;he&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;he will&quot;</span><span class="p">,</span><span class="s2">&quot;he&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;he will have&quot;</span><span class="p">,</span><span class="s2">&quot;he&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;he is&quot;</span><span class="p">,</span><span class="s2">&quot;how&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;how did&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;how&#39;d&#39;y&quot;</span><span class="p">:</span> <span class="s2">&quot;how do you&quot;</span><span class="p">,</span><span class="s2">&quot;how&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;how will&quot;</span><span class="p">,</span><span class="s2">&quot;how&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;how is&quot;</span><span class="p">,</span>
+    <span class="c1"># I.</span>
+    <span class="s2">&quot;i&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;i would&quot;</span><span class="p">,</span><span class="s2">&quot;i&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;i would have&quot;</span><span class="p">,</span><span class="s2">&quot;i&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;i will&quot;</span><span class="p">,</span><span class="s2">&quot;i&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;i will have&quot;</span><span class="p">,</span><span class="s2">&quot;i&#39;m&quot;</span><span class="p">:</span> <span class="s2">&quot;i am&quot;</span><span class="p">,</span><span class="s2">&quot;i&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;i have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;isn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;is not&quot;</span><span class="p">,</span><span class="s2">&quot;it&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;it had&quot;</span><span class="p">,</span><span class="s2">&quot;it&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;it would have&quot;</span><span class="p">,</span><span class="s2">&quot;it&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;it will&quot;</span><span class="p">,</span><span class="s2">&quot;itll&quot;</span><span class="p">:</span> <span class="s2">&quot;it will&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;it&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;it will have&quot;</span><span class="p">,</span><span class="s2">&quot;it&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;it is&quot;</span><span class="p">,</span>
+    <span class="c1"># L.</span>
+    <span class="s2">&quot;let&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;let us&quot;</span><span class="p">,</span>
+    <span class="c1"># M.</span>
+    <span class="s2">&quot;ma&#39;am&quot;</span><span class="p">:</span> <span class="s2">&quot;madam&quot;</span><span class="p">,</span><span class="s2">&quot;mayn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;may not&quot;</span><span class="p">,</span><span class="s2">&quot;might&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;might have&quot;</span><span class="p">,</span><span class="s2">&quot;mightn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;might not&quot;</span><span class="p">,</span><span class="s2">&quot;mightn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;might not have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;must&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;must have&quot;</span><span class="p">,</span><span class="s2">&quot;mustn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;must not&quot;</span><span class="p">,</span><span class="s2">&quot;mustn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;must not have&quot;</span><span class="p">,</span>
+    <span class="c1"># N.</span>
+    <span class="s2">&quot;needn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;need not&quot;</span><span class="p">,</span><span class="s2">&quot;needn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;need not have&quot;</span><span class="p">,</span>
+    <span class="c1"># O.</span>
+    <span class="s2">&quot;o&#39;clock&quot;</span><span class="p">:</span> <span class="s2">&quot;of the clock&quot;</span><span class="p">,</span><span class="s2">&quot;oughtn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;ought not&quot;</span><span class="p">,</span><span class="s2">&quot;oughtn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;ought not have&quot;</span><span class="p">,</span>
+    <span class="c1"># S.</span>
+    <span class="s2">&quot;shan&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;shall not&quot;</span><span class="p">,</span><span class="s2">&quot;sha&#39;n&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;shall not&quot;</span><span class="p">,</span><span class="s2">&quot;shan&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;shall not have&quot;</span><span class="p">,</span><span class="s2">&quot;she&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;she would&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;she&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;she would have&quot;</span><span class="p">,</span><span class="s2">&quot;she&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;she will&quot;</span><span class="p">,</span><span class="s2">&quot;she&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;she will have&quot;</span><span class="p">,</span><span class="s2">&quot;she&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;she is&quot;</span><span class="p">,</span><span class="s2">&quot;should&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;should have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;shouldn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;should not&quot;</span><span class="p">,</span><span class="s2">&quot;shouldn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;should not have&quot;</span><span class="p">,</span><span class="s2">&quot;so&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;so have&quot;</span><span class="p">,</span><span class="s2">&quot;so&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;so is&quot;</span><span class="p">,</span>
+    <span class="c1"># T.</span>
+    <span class="s2">&quot;that&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;that would&quot;</span><span class="p">,</span><span class="s2">&quot;that&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;that would have&quot;</span><span class="p">,</span><span class="s2">&quot;that&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;that is&quot;</span><span class="p">,</span><span class="s2">&quot;there&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;there had&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;there&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;there would have&quot;</span><span class="p">,</span><span class="s2">&quot;there&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;there is&quot;</span><span class="p">,</span><span class="s2">&quot;they&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;they would&quot;</span><span class="p">,</span><span class="s2">&quot;they&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;they would have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;they&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;they will&quot;</span><span class="p">,</span><span class="s2">&quot;they&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;they will have&quot;</span><span class="p">,</span><span class="s2">&quot;they&#39;re&quot;</span><span class="p">:</span> <span class="s2">&quot;they are&quot;</span><span class="p">,</span><span class="s2">&quot;they&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;they have&quot;</span><span class="p">,</span><span class="s2">&quot;to&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;to have&quot;</span><span class="p">,</span>
+    <span class="c1"># V.</span>
+    <span class="s2">&quot;vr&quot;</span> <span class="p">:</span> <span class="s2">&quot;virtual reality&quot;</span><span class="p">,</span>
+    <span class="c1"># W.</span>
+    <span class="s2">&quot;wasn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;was not&quot;</span><span class="p">,</span><span class="s2">&quot;we&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;we had&quot;</span><span class="p">,</span><span class="s2">&quot;we&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;we would have&quot;</span><span class="p">,</span><span class="s2">&quot;we&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;we will&quot;</span><span class="p">,</span><span class="s2">&quot;we&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;we will have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;we&#39;re&quot;</span><span class="p">:</span> <span class="s2">&quot;we are&quot;</span><span class="p">,</span><span class="s2">&quot;we&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;we have&quot;</span><span class="p">,</span><span class="s2">&quot;weren&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;were not&quot;</span><span class="p">,</span><span class="s2">&quot;what&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;what will&quot;</span><span class="p">,</span><span class="s2">&quot;what&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;what will have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;what&#39;re&quot;</span><span class="p">:</span> <span class="s2">&quot;what are&quot;</span><span class="p">,</span><span class="s2">&quot;what&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;what is&quot;</span><span class="p">,</span><span class="s2">&quot;what&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;what have&quot;</span><span class="p">,</span><span class="s2">&quot;when&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;when is&quot;</span><span class="p">,</span><span class="s2">&quot;when&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;when have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;where&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;where did&quot;</span><span class="p">,</span><span class="s2">&quot;where&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;where is&quot;</span><span class="p">,</span><span class="s2">&quot;where&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;where have&quot;</span><span class="p">,</span><span class="s2">&quot;who&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;who will&quot;</span><span class="p">,</span><span class="s2">&quot;who&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;who will have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;who&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;who is&quot;</span><span class="p">,</span><span class="s2">&quot;who&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;who have&quot;</span><span class="p">,</span><span class="s2">&quot;why&#39;s&quot;</span><span class="p">:</span> <span class="s2">&quot;why is&quot;</span><span class="p">,</span><span class="s2">&quot;why&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;why have&quot;</span><span class="p">,</span><span class="s2">&quot;will&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;will have&quot;</span><span class="p">,</span><span class="s2">&quot;won&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;will not&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;won&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;will not have&quot;</span><span class="p">,</span><span class="s2">&quot;would&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;would have&quot;</span><span class="p">,</span><span class="s2">&quot;wouldn&#39;t&quot;</span><span class="p">:</span> <span class="s2">&quot;would not&quot;</span><span class="p">,</span><span class="s2">&quot;wouldn&#39;t&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;would not have&quot;</span><span class="p">,</span>
+    <span class="c1"># Y.</span>
+    <span class="s2">&quot;y&#39;all&quot;</span><span class="p">:</span> <span class="s2">&quot;you all&quot;</span><span class="p">,</span><span class="s2">&quot;y&#39;alls&quot;</span><span class="p">:</span> <span class="s2">&quot;you alls&quot;</span><span class="p">,</span><span class="s2">&quot;y&#39;all&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;you all would&quot;</span><span class="p">,</span><span class="s2">&quot;y&#39;all&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;you all would have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;y&#39;all&#39;re&quot;</span><span class="p">:</span> <span class="s2">&quot;you all are&quot;</span><span class="p">,</span><span class="s2">&quot;y&#39;all&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;you all have&quot;</span><span class="p">,</span><span class="s2">&quot;you&#39;d&quot;</span><span class="p">:</span> <span class="s2">&quot;you had&quot;</span><span class="p">,</span><span class="s2">&quot;you&#39;d&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;you would have&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;you&#39;ll&quot;</span><span class="p">:</span> <span class="s2">&quot;you you will&quot;</span><span class="p">,</span><span class="s2">&quot;you&#39;ll&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;you you will have&quot;</span><span class="p">,</span><span class="s2">&quot;you&#39;re&quot;</span><span class="p">:</span> <span class="s2">&quot;you are&quot;</span><span class="p">,</span><span class="s2">&quot;you&#39;ve&quot;</span><span class="p">:</span> <span class="s2">&quot;you have&quot;</span>
+<span class="p">}</span>
+<span class="n">c_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s1">&#39;(</span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="s1">&#39;|&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cList</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+<span class="c1"># define expansion function</span>
+<span class="k">def</span> <span class="nf">expandContractions</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">cList</span><span class="o">=</span><span class="n">cList</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="n">match</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">cList</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="n">c_re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">replace</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="string-formatting">
+<h4>String Formatting<a class="headerlink" href="#string-formatting" title="Permalink to this headline">#</a></h4>
+<p>The following string formatting is performed:</p>
+<ul class="simple">
+<li><p>All sentences are transformed to end in a ‘.’</p></li>
+<li><p>All floating point numbers are removed.</p></li>
+<li><p>Non alphanumeric characters are dropped.</p></li>
+<li><p>Repeated fullstops and additional white space are dropped.</p></li>
+</ul>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define str format function</span>
+<span class="k">def</span> <span class="nf">clean</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[?!:]&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="c1"># make all sentence ends with &#39;.&#39;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\d*\.\d+&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="c1"># remove all floats</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[^a-zA-Z0-9. ]&quot;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="c1"># remove all not listed chars </span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;\.\.+&#39;</span><span class="p">,</span> <span class="s1">&#39;. &#39;</span><span class="p">,</span><span class="n">text</span><span class="p">)</span> <span class="c1"># remove repeat fullstops</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39; +&#39;</span><span class="p">,</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span> <span class="c1"># remove extra whitespace</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="duplicate-removal">
+<h4>Duplicate Removal<a class="headerlink" href="#duplicate-removal" title="Permalink to this headline">#</a></h4>
+<p>Consecutive duplicate words are dropped and consecutive repeat characters are limited to a maximum of 2.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define duplicate removal function</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">groupby</span>
+
+<span class="k">def</span> <span class="nf">consec_dup</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">groupby</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))])</span> <span class="c1"># remove repeat consecutive words</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(.)\1+&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;\1\1&#39;</span><span class="p">,</span><span class="n">text</span><span class="p">)</span> <span class="c1"># replace &gt;2 consecutive duplicate characters</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="spelling-correction">
+<h4>Spelling Correction<a class="headerlink" href="#spelling-correction" title="Permalink to this headline">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">SymspellPy</span></code> library <span id="id1">[<a class="reference internal" href="bibliography.html#id6" title="Garbe Wolf. Symspellpy. 2022. URL: https://github.com/wolfgarbe/symspell.">Wolf, 2022</a>]</span> is used to perform spelling correction.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pkg_resources</span>
+<span class="kn">from</span> <span class="nn">symspellpy</span> <span class="kn">import</span> <span class="n">SymSpell</span><span class="p">,</span> <span class="n">Verbosity</span>
+
+<span class="n">sym_spell</span> <span class="o">=</span> <span class="n">SymSpell</span><span class="p">(</span><span class="n">max_dictionary_edit_distance</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">prefix_length</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">dictionary_path</span> <span class="o">=</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span>
+    <span class="s2">&quot;symspellpy&quot;</span><span class="p">,</span> <span class="s2">&quot;frequency_dictionary_en_82_765.txt&quot;</span>
+<span class="p">)</span>
+
+<span class="n">sym_spell</span><span class="o">.</span><span class="n">load_dictionary</span><span class="p">(</span><span class="n">dictionary_path</span><span class="p">,</span> <span class="n">term_index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">count_index</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">spell</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">sentences</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+    <span class="n">corrected</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">sym_spell</span><span class="o">.</span><span class="n">lookup_compound</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">max_edit_distance</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ignore_non_words</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">ignore_term_with_digits</span><span class="o">=</span><span class="kc">True</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">term</span><span class="o">+</span><span class="s1">&#39;.&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">corrected</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="lemmatisation">
+<h4>Lemmatisation<a class="headerlink" href="#lemmatisation" title="Permalink to this headline">#</a></h4>
+<p>The <code class="docutils literal notranslate"><span class="pre">spaCy</span></code> library <span id="id2">[<a class="reference internal" href="bibliography.html#id4" title="Matthew Honnibal, Ines Montani, Sofie Van Landeghem, and Adriane Boyd. Spacy: industrial-strength natural language processing in python. 2020. URL: https://github.com/explosion/spaCy, doi:10.5281/zenodo.1212303.">Honnibal <em>et al.</em>, 2020</a>]</span> is utilised to lemmatise the review text and transform all words to their base root form.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacy</span>
+<span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">lemma</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">token</span><span class="o">.</span><span class="n">lemma_</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">]</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="apply-functions">
+<h3>Apply Functions<a class="headerlink" href="#apply-functions" title="Permalink to this headline">#</a></h3>
+<p>All functions are applied and the output saved to .csv for proceeding stages.</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">func</span> <span class="ow">in</span> <span class="p">[</span><span class="n">expandContractions</span><span class="p">,</span><span class="n">clean</span><span class="p">,</span><span class="n">consec_dup</span><span class="p">,</span><span class="n">spell</span><span class="p">,</span><span class="n">lemma</span><span class="p">]:</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">review_text</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">review_text</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">func</span><span class="p">,</span><span class="n">na_action</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;data/preTag_df1.csv&#39;</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">df</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>review_text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>be be pretty good .</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>the game have not crash on I do not know what ...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>good cod since bo2 . come from a cod vet the m...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>I like the game because I be a big cod fan eve...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>just hit lvi 55 in 18 hour be it fun . yes be ...</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>115947</th>
+      <td>I have like how cod make sure to add some cont...</td>
+    </tr>
+    <tr>
+      <th>115948</th>
+      <td>I hate this game but I still play it because I...</td>
+    </tr>
+    <tr>
+      <th>115949</th>
+      <td>my been .</td>
+    </tr>
+    <tr>
+      <th>115950</th>
+      <td>too many mode cater to the young below 30 audi...</td>
+    </tr>
+    <tr>
+      <th>115951</th>
+      <td>pew game . .</td>
+    </tr>
+  </tbody>
+</table>
+<p>115952 rows × 1 columns</p>
+</div></div></div>
+</div>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="2_Method.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Method</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="5_eda.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Exploratory Data Analysis</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Rob Taylor<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

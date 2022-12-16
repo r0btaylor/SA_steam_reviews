@@ -1,0 +1,95 @@
+Traceback (most recent call last):
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\jupyter_cache\executors\utils.py", line 51, in single_nb_execution
+    executenb(
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\nbclient\client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\nbclient\util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\nbclient\util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\asyncio\base_events.py", line 646, in run_until_complete
+    return future.result()
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\nbclient\client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\nbclient\client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "C:\Users\rob_t\anaconda3\envs\steam_nlp\lib\site-packages\nbclient\client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# create df of neutral descriptors contained in negative list
+# negative list from https://gist.github.com/mkulakowski2/4289441
+
+df1 = tag_df[(tag_df['sentiment']==0) & (tag_df['description'].isin(negList))]
+df1 = df1.groupby('description',as_index=False)['aspect'].count().rename(columns={'aspect':'Count'})
+# plot negative terms
+ax=sns.catplot(data=df1[df1['Count']>=20].sort_values(by='Count',ascending=False),
+            kind='bar',
+            y="description",
+            x='Count',
+            palette = ['#FF6F69'],
+            height=7,
+            aspect = 1.5)
+plt.title('Misclassified Negative Descriptors',fontsize=14)
+plt.tick_params(labelsize=12)
+plt.ylabel('Descriptor',fontsize=12)
+plt.tight_layout()
+plt.show();
+
+# create df of neutral descriptors contained in positive list
+# positive list from https://gist.github.com/mkulakowski2/4289437
+df2 = tag_df[(tag_df['sentiment']==0) & (tag_df['description'].isin(posList))]
+df2 = df2.groupby('description',as_index=False)['aspect'].count().rename(columns={'aspect':'Count'})
+
+# plot positive terms
+ax=sns.catplot(data=df2[df2['Count']>=15].sort_values(by='Count',ascending=False),
+            kind='bar',
+            y="description",
+            x='Count',
+            palette = ['#88D8B0'],
+            height=7,
+            aspect=1.5)
+plt.title('Misclassified Positive Descriptors',fontsize=14)
+plt.tick_params(labelsize=12)
+plt.ylabel('Descriptor',fontsize=12)
+plt.tight_layout()
+plt.show();
+
+
+------------------
+
+[1;31m---------------------------------------------------------------------------[0m
+[1;31mValueError[0m                                Traceback (most recent call last)
+Input [1;32mIn [5][0m, in [0;36m<cell line: 26>[1;34m()[0m
+[0;32m     23[0m df2 [38;5;241m=[39m df2[38;5;241m.[39mgroupby([38;5;124m'[39m[38;5;124mdescription[39m[38;5;124m'[39m,as_index[38;5;241m=[39m[38;5;28;01mFalse[39;00m)[[38;5;124m'[39m[38;5;124maspect[39m[38;5;124m'[39m][38;5;241m.[39mcount()[38;5;241m.[39mrename(columns[38;5;241m=[39m{[38;5;124m'[39m[38;5;124maspect[39m[38;5;124m'[39m:[38;5;124m'[39m[38;5;124mCount[39m[38;5;124m'[39m})
+[0;32m     25[0m [38;5;66;03m# plot positive terms[39;00m
+[1;32m---> 26[0m ax[38;5;241m=[39m[43msns[49m[38;5;241;43m.[39;49m[43mcatplot[49m[43m([49m[43mdata[49m[38;5;241;43m=[39;49m[43mdf2[49m[43m[[49m[43mdf2[49m[43m[[49m[38;5;124;43m'[39;49m[38;5;124;43mCount[39;49m[38;5;124;43m'[39;49m[43m][49m[38;5;241;43m>[39;49m[38;5;241;43m=[39;49m[38;5;241;43m15[39;49m[43m][49m[38;5;241;43m.[39;49m[43msort_values[49m[43m([49m[43mby[49m[38;5;241;43m=[39;49m[38;5;124;43m'[39;49m[38;5;124;43mCount[39;49m[38;5;124;43m'[39;49m[43m,[49m[43mascending[49m[38;5;241;43m=[39;49m[38;5;28;43;01mFalse[39;49;00m[43m)[49m[43m,[49m
+[0;32m     27[0m [43m            [49m[43mkind[49m[38;5;241;43m=[39;49m[38;5;124;43m'[39;49m[38;5;124;43mbar[39;49m[38;5;124;43m'[39;49m[43m,[49m
+[0;32m     28[0m [43m            [49m[43my[49m[38;5;241;43m=[39;49m[38;5;124;43m"[39;49m[38;5;124;43mdescription[39;49m[38;5;124;43m"[39;49m[43m,[49m
+[0;32m     29[0m [43m            [49m[43mx[49m[38;5;241;43m=[39;49m[38;5;124;43m'[39;49m[38;5;124;43mCount[39;49m[38;5;124;43m'[39;49m[43m,[49m
+[0;32m     30[0m [43m            [49m[43mpalette[49m[43m [49m[38;5;241;43m=[39;49m[43m [49m[43m[[49m[38;5;124;43m'[39;49m[38;5;124;43m#88D8B0[39;49m[38;5;124;43m'[39;49m[43m][49m[43m,[49m
+[0;32m     31[0m [43m            [49m[43mheight[49m[38;5;241;43m=[39;49m[38;5;241;43m7[39;49m[43m,[49m
+[0;32m     32[0m [43m            [49m[43maspect[49m[38;5;241;43m=[39;49m[38;5;241;43m1.5[39;49m[43m)[49m
+[0;32m     33[0m plt[38;5;241m.[39mtitle([38;5;124m'[39m[38;5;124mMisclassified Positive Descriptors[39m[38;5;124m'[39m,fontsize[38;5;241m=[39m[38;5;241m14[39m)
+[0;32m     34[0m plt[38;5;241m.[39mtick_params(labelsize[38;5;241m=[39m[38;5;241m12[39m)
+
+File [1;32m~\anaconda3\envs\steam_nlp\lib\site-packages\seaborn\categorical.py:3207[0m, in [0;36mcatplot[1;34m(data, x, y, hue, row, col, col_wrap, estimator, errorbar, n_boot, units, seed, order, hue_order, row_order, col_order, height, aspect, kind, native_scale, formatter, orient, color, palette, hue_norm, legend, legend_out, sharex, sharey, margin_titles, facet_kws, ci, **kwargs)[0m
+[0;32m   3201[0m hue_order [38;5;241m=[39m p[38;5;241m.[39mhue_names
+[0;32m   3203[0m [38;5;66;03m# Determine the palette to use[39;00m
+[0;32m   3204[0m [38;5;66;03m# (FacetGrid will pass a value for ``color`` to the plotting function[39;00m
+[0;32m   3205[0m [38;5;66;03m# so we need to define ``palette`` to get default behavior for the[39;00m
+[0;32m   3206[0m [38;5;66;03m# categorical functions[39;00m
+[1;32m-> 3207[0m [43mp[49m[38;5;241;43m.[39;49m[43mestablish_colors[49m[43m([49m[43mcolor[49m[43m,[49m[43m [49m[43mpalette[49m[43m,[49m[43m [49m[38;5;241;43m1[39;49m[43m)[49m
+[0;32m   3208[0m [38;5;28;01mif[39;00m kind [38;5;241m!=[39m [38;5;124m"[39m[38;5;124mpoint[39m[38;5;124m"[39m [38;5;129;01mor[39;00m hue [38;5;129;01mis[39;00m [38;5;129;01mnot[39;00m [38;5;28;01mNone[39;00m:
+[0;32m   3209[0m     palette [38;5;241m=[39m p[38;5;241m.[39mcolors
+
+File [1;32m~\anaconda3\envs\steam_nlp\lib\site-packages\seaborn\categorical.py:707[0m, in [0;36m_CategoricalPlotter.establish_colors[1;34m(self, color, palette, saturation)[0m
+[0;32m    705[0m [38;5;66;03m# Determine the gray color to use for the lines framing the plot[39;00m
+[0;32m    706[0m light_vals [38;5;241m=[39m [rgb_to_hls([38;5;241m*[39mc)[[38;5;241m1[39m] [38;5;28;01mfor[39;00m c [38;5;129;01min[39;00m rgb_colors]
+[1;32m--> 707[0m lum [38;5;241m=[39m [38;5;28;43mmin[39;49m[43m([49m[43mlight_vals[49m[43m)[49m [38;5;241m*[39m [38;5;241m.6[39m
+[0;32m    708[0m gray [38;5;241m=[39m mpl[38;5;241m.[39mcolors[38;5;241m.[39mrgb2hex((lum, lum, lum))
+[0;32m    710[0m [38;5;66;03m# Assign object attributes[39;00m
+
+[1;31mValueError[0m: min() arg is an empty sequence
+ValueError: min() arg is an empty sequence
+

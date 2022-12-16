@@ -1,0 +1,14 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: 1_intro
+chapters:
+- file: 3_data
+- file: 2_Method
+- file: 4_Processing
+- file: 5_eda
+- file: 6_textblobUpdate
+- file: 7_Interpretation
+
+- file: bibliography.md
